@@ -1,0 +1,20 @@
+body{
+    margin:0px;
+    background-color: black;
+}
+
+canvas{
+    background-color: black;
+    color: rgb(247, 245, 236);
+}
+
+h1{
+    margin-top: 50px;
+    color: rgb(10, 248, 10);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 70px;
+    font-weight: bolder;
+}
