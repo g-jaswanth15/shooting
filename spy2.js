@@ -10,6 +10,7 @@ var shootmusic = document.getElementById("music")
 var fire = document.getElementById("music2")
 var score =0;
 document.getElementById('tryagain').style.display = "none"
+//after clicking the start button to start the game
 document.getElementById("start").addEventListener("click",()=>{
 
     document.querySelector("#startgame").style.display = "none"
@@ -17,42 +18,43 @@ document.getElementById("start").addEventListener("click",()=>{
     var highscore = localStorage.getItem("best")
 
     var bestscore = highscore
-  canvas.style.display = "block"
+    canvas.style.display = "block"
 
-  var enemies = []
-  class enemy{
-    constructor(x,y){
-        this.x = x
-        this.y = y
-        this.r =(Math.random()*15) +5
-        this.velocity = 5
+    var enemies = []
+    //creating white spikes
+    class enemy{
+        constructor(x,y){
+            this.x = x
+            this.y = y
+            this.r =(Math.random()*15) +5
+            this.velocity = 5
+        }
+
+        draw(){
+
+        context.beginPath()
+        context.fillStyle = "rgb(247, 245, 236)"
+        //ctx.fillRect(this.x,this.y,10,10)
+        context.arc(this.x,this.y,this.r,0,2*Math.PI)
+        context.fill()
+
+        
+        for(let i=1;i<=10;i++){
+            let j = 36 * i 
+            context.beginPath()
+            context.moveTo(this.x+((this.r)*Math.cos((j -10) * (Math.PI /180))),this.y+((this.r)*Math.sin((j-10) * (Math.PI /180))))
+            context.lineTo(this.x+(((this.r)+10)*Math.cos(j * (Math.PI /180))),this.y+((this.r+10)*Math.sin(j * (Math.PI /180))))
+            context.lineTo(this.x+((this.r)*Math.cos((j+10) * (Math.PI /180))),this.y+((this.r)*Math.sin((j+10) * (Math.PI /180))))
+            context.fill()
+        }
+
+        }
+
+        update(){
+        this.draw()
+        this.x -= 2
+        }
     }
-
-    draw(){
-
-      context.beginPath()
-      context.fillStyle = "rgb(247, 245, 236)"
-      //ctx.fillRect(this.x,this.y,10,10)
-      context.arc(this.x,this.y,this.r,0,2*Math.PI)
-      context.fill()
-
-      
-      for(let i=1;i<=10;i++){
-          let j = 36 * i 
-          context.beginPath()
-          context.moveTo(this.x+((this.r)*Math.cos((j -10) * (Math.PI /180))),this.y+((this.r)*Math.sin((j-10) * (Math.PI /180))))
-          context.lineTo(this.x+(((this.r)+10)*Math.cos(j * (Math.PI /180))),this.y+((this.r+10)*Math.sin(j * (Math.PI /180))))
-          context.lineTo(this.x+((this.r)*Math.cos((j+10) * (Math.PI /180))),this.y+((this.r)*Math.sin((j+10) * (Math.PI /180))))
-          context.fill()
-      }
-
-    }
-
-    update(){
-      this.draw()
-      this.x -= 2
-    }
-  }
 
   function moreEnemies(){
     setInterval(() => {
@@ -60,6 +62,7 @@ document.getElementById("start").addEventListener("click",()=>{
     }, 1000);   
   }
 
+  //creating player
   class SpaceShip {
     constructor(size, position) {
       this.color = 'rgb(202, 30, 17)';
@@ -121,22 +124,19 @@ document.getElementById("start").addEventListener("click",()=>{
       }
       context.restore();
     }
-
+    
+    //for moving the spaceship
     updateSpaceShip() {
-      // Angle has to be in radians
       const degToRad = Math.PI / 180;
       // Change the position based on velocity
       this.position.x += this.velocity.x;
       this.position.y += this.velocity.y;
-      // Move spaceship to other side when leaving screen
-      //this.position.x = (canvas.width + this.position.x) % canvas.width;
-      //console.log((canvas.width + this.position.x) % canvas.width)
-      
+      //moving spaceship to other side when leaving from one side
       this.position.y = (canvas.height + this.position.y) % canvas.height;
-      // Turning
+      
       if (this.rotatingLeft) this.angle -= degToRad;
       if (this.rotatingRight) this.angle += degToRad;
-      // Acceleration
+      
       if (this.engineOn) {
         this.velocity.x += (THRUST / 200) * Math.sin(this.angle);
         this.velocity.y -= (THRUST / 200) * Math.cos(this.angle);
@@ -150,7 +150,7 @@ document.getElementById("start").addEventListener("click",()=>{
 
   const spaceShip = new SpaceShip(spaceshipSize, spaceshipPosition);
 
-    
+    //controlling the spaceship with arrows
   function keys(event) {
     const { keyCode, type } = event;
     const isKeyDown = type === 'keydown' ? true : false;
@@ -164,6 +164,7 @@ document.getElementById("start").addEventListener("click",()=>{
     if (keyCode === 40) spaceShip.engineback = isKeyDown;
   }
 
+  //creating bombs to hit the whitespikes
   class bombs{
     constructor(x,y,velocity){
         this.x = x
@@ -189,14 +190,14 @@ document.getElementById("start").addEventListener("click",()=>{
 
   var shootingbombs = []
 
+  //animate the game
   function moving() {
       // Clear screen
       context.fillStyle = "rgb(0,0,0)";
       context.fillRect(0, 0, canvas.width, canvas.height);
       spaceShip.updateSpaceShip();
-      // Begin drawing
       spaceShip.draw();
-      // Repeat
+
       var animate =requestAnimationFrame(moving);
 
       if(score>highscore || highscore==null){
@@ -206,6 +207,8 @@ document.getElementById("start").addEventListener("click",()=>{
         bestscore=highscore
     }
       scoreboard()
+
+      //detection of colision between the spaceship and whitespikes
       if((canvas.width + spaceShip.position.x) % canvas.width < 3){
         stoping()
       }
@@ -230,6 +233,7 @@ document.getElementById("start").addEventListener("click",()=>{
         (0.5* spaceShip.size.height +   spaceShip.position.y) -eny.y
       )
 
+    //detection of colision between the bomb and whitespikes
       if((dist1 - spaceShip.size.height/2 - eny.r)<1){
         stoping()
       }
@@ -256,6 +260,7 @@ document.getElementById("start").addEventListener("click",()=>{
       })
     })
 
+    //scoring
     function scoreboard(){
 
         context.fillStyle = "rgb(4, 82, 248)"
@@ -268,6 +273,7 @@ document.getElementById("start").addEventListener("click",()=>{
 
       }
     
+    //detection occurs to stop the game
     function stoping(){
         shootmusic.pause()
         fire.pause()
@@ -275,8 +281,9 @@ document.getElementById("start").addEventListener("click",()=>{
         document.getElementById("startgame").style.display = "block"
         document.getElementById("start").style.display = "none"
         var totalscore = score ;//score
+        document.querySelector("ul").style.display = "none"
         document.getElementById("tryagain").style.display = "block"
-        document.getElementById('score').innerText = "🎉SCORE :" + totalscore +"🎉"
+        document.getElementById('score').innerText = "🎉 SCORE :" + totalscore +"🎉"
         document.getElementById('tryagain').addEventListener('click',()=>{
         window.location.reload(true)
         })
@@ -286,12 +293,12 @@ document.getElementById("start").addEventListener("click",()=>{
         if(localStorage.getItem("best") == null){
         localStorage.setItem("best",totalscore)
         var highscore = localStorage.getItem("best")
-            document.getElementById('highscore').innerText = "🔥BEST :" + highscore +"🔥"
+            document.getElementById('highscore').innerText = "🔥 BEST :" + highscore +"🔥"
         }
         else if(totalscore > localStorage.getItem('best')){
             localStorage.setItem("best",totalscore)
             var highscore = localStorage.getItem("best")
-            document.getElementById('highscore').innerText = "🔥BEST :" + highscore +"🔥"
+            document.getElementById('highscore').innerText = "🔥 BEST :" + highscore +"🔥"
         }
         else{
             var highscore = localStorage.getItem("best")
@@ -303,7 +310,6 @@ document.getElementById("start").addEventListener("click",()=>{
     // Event Listeners
     document.addEventListener('keydown', keys);
     document.addEventListener('keyup', keys);
-    // Start the game
 
     document.addEventListener('keyup', ()=>{
       if(event.keyCode == 32){
