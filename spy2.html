@@ -8,9 +8,23 @@
     </head>
     
     <body>
-        <img src="space1.jpg" width="0" height="0" alt="">
-        <h1>SPACE SHOOTING</h1>
-        <canvas id="canvas"></canvas>
+        
+        <div id="startgame">
+            <h1>SPACE SHOOTING</h1>
+            <div style="margin-bottom: 100px;"></div>
+            <div id="score"></div>
+            <div style="margin-bottom: 50px;"></div>
+            <div id="highscore"></div>
+            <div style="margin-bottom: 50px;"></div>
+            <div id="startbutton">
+                <button id="start">StartGame</button>
+                <button id="tryagain">TRY AGAIN</button>
+            </div>
+        </div>
+        <audio id="music" src="shootmusic.mp3"></audio>
+        <audio id="music2" src="fire.wav"></audio>
+        
+        <canvas id="game"></canvas>
         <script src="spy2.js"></script>
     </body>
 </html>
