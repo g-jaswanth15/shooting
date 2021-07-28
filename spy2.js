@@ -281,6 +281,7 @@ document.getElementById("start").addEventListener("click",()=>{
         document.getElementById("startgame").style.display = "block"
         document.getElementById("start").style.display = "none"
         var totalscore = score ;//score
+        document.querySelector("ul").style.display = "none"
         document.getElementById("tryagain").style.display = "block"
         document.getElementById('score').innerText = "🎉 SCORE :" + totalscore +"🎉"
         document.getElementById('tryagain').addEventListener('click',()=>{

@@ -80,3 +80,9 @@ h1{
     border:4px darkcyan solid ;
 
 }
+ul{
+    margin-top: 100px;
+    color: rgb(240, 232, 232);
+    list-style: none;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
